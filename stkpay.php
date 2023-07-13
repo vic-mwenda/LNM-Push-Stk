@@ -21,7 +21,6 @@ if (isset($_GET['phone'])) {
 
     $Password =$encodedData;
 
-    $CallBackURL = 'https://small-planets-guess.loca.lt/LNM-Push-Stk/callback_url.php';
     $Type_of_Transaction = 'CustomerPayBillOnline';
     $credentials = base64_encode("$consumerKey . ':' . $consumerSecret");
 
@@ -64,7 +63,7 @@ if (isset($_GET['phone'])) {
         'PartyA' => $PartyA,
         'PartyB' => $BusinessShortCode,
         'PhoneNumber' => $PartyA,
-        'CallBackURL' => 'https://peternjeru.co.ke/safdaraja/api/confirmation.php',
+        'CallBackURL' => 'https://59fd-197-138-1-2.ngrok-free.app/LNM-Push-Stk/callback.php',
         'AccountReference' => 'Test001',
         'TransactionDesc' => 'test',
     ];
@@ -76,6 +75,7 @@ if (isset($_GET['phone'])) {
     curl_close($ch);
 
     $result = json_decode($response,true);
+    $CheckoutRequestID = $result['CheckoutRequestID'];
 
     if ($result === null) {
         echo "Failed to decode JSON response.";
@@ -100,21 +100,53 @@ if (isset($_GET['phone'])) {
 
     //Register Urls
 
-    $curl = curl_init('https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl');
-    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json','Authorization: Bearer '. $access_token));
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($curl, CURLOPT_POST, true);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode(array(
-        'ShortCode' => "600141",
-        'ResponseType' => 'Completed',
-        'ConfirmationURL' => "https://56b0-197-138-1-2.ngrok-free.app/LNM-Push-Stk/callback_url.php",
-    )));
-    $curl_response = curl_exec($curl);
-    echo $curl_response;
+    header("Location:confirmation.php");
 
-    header("Location:index.php");
 
 
 }    
+
+// $data = array(
+//     'BusinessShortCode' => $BusinessShortCode,
+//     'Password' => $Password,
+//     'Timestamp' => $Timestamp,
+//     'CheckoutRequestID' => $CheckoutRequestID
+// );
+
+// $data_string = json_encode($data);
+
+// $access_token = 'YOUR_ACCESS_TOKEN'; // Replace with your actual access token
+
+// $url = 'https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query';
+
+// $totalSeconds = 30;
+// $intervalSeconds = 10;
+// $startTime = time();
+// $endTime = $startTime + $totalSeconds;
+
+// while (time() < $endTime) {
+//     $ch = curl_init($url);
+//     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Authorization: Bearer ' . $access_token));
+//     curl_setopt($ch, CURLOPT_POST, 1);
+//     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+//     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+//     $response = curl_exec($ch);
+//     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+//     curl_close($ch);
+
+//     if ($httpCode == 200) {
+//         // Successful API call
+//         echo $response;
+//     } else {
+//         // API call failed
+//         echo 'Error: ' . $response;
+//     }
+
+//     sleep($intervalSeconds);
+// }
+
+// ?>
 
 
